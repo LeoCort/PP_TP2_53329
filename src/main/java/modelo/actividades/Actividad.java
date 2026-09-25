@@ -1,7 +1,14 @@
+package modelo.actividades;
+
+import excepciones.CupoExcedidoException;
+import modelo.Estudiante;
+import modelo.Inscripcion;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Actividad {
+public abstract class Actividad implements Serializable {
     private int id;
     private String titulo;
     private int cupoMaximo;
@@ -17,7 +24,10 @@ public abstract class Actividad {
 
     }
 
-    public Inscripcion inscribir(Estudiante estudiante){
+    public Inscripcion inscribir (Estudiante estudiante) throws CupoExcedidoException {
+        if(this.inscripciones.size()>= this.cupoMaximo){
+            throw new CupoExcedidoException("No hay cupo disponible en la actividad:"+ this.titulo);
+        }
         Inscripcion nuevaInscripcion = new Inscripcion("confirmada",estudiante);
         this.inscripciones.add(nuevaInscripcion);
         return nuevaInscripcion;
@@ -31,7 +41,7 @@ public abstract class Actividad {
         }
     }
     public final void mostrarIdentificacion(){
-            System.out.println("Actividad: " + titulo + " | Tipo: " + getTipo());
+            System.out.println("modelo.actividades.Actividad: " + titulo + " | Tipo: " + getTipo());
         }
 
 
@@ -42,4 +52,7 @@ public abstract class Actividad {
             return titulo;
         }
 
+    public List<Inscripcion> getInscripciones() {
+        return this.inscripciones;
+    }
 }
